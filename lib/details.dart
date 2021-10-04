@@ -1,29 +1,14 @@
 import 'package:flutter/material.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-// ignore: import_of_legacy_library_into_null_safe
+
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Image App Demo',
-      theme: ThemeData(
-        primaryColor: Color(0xff476cfb),
-      ),
-      home: ProfilePage(),
-    );
-  }
-}
 
 
 class ProfilePage extends StatefulWidget {
@@ -38,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
 
     Future getImage() async {
-      var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+       var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
       setState(() {
         _image = image;
@@ -49,9 +34,10 @@ class _ProfilePageState extends State<ProfilePage> {
     Future uploadPic(BuildContext context) async{
       String fileName = basename(_image.path);
        Reference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
-       Task uploadTask = firebaseStorageRef.putFile(_image);
-       TaskSnapshot taskSnapshot=(await (await uploadTask).ref.getDownloadURL()) as TaskSnapshot;
-       setState(() {
+       UploadTask uploadTask = firebaseStorageRef.putFile(_image);
+       // ignore: unused_local_variable
+       Future<String> taskSnapshot=(await uploadTask).ref.getDownloadURL();
+              setState(() {
           print("Profile Picture uploaded");
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
        });

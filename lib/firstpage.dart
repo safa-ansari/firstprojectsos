@@ -1,7 +1,8 @@
 import 'package:soskrunewproject/LoginScreen.dart';
-import 'package:soskrunewproject/SignUpScreen.dart';
+import 'package:soskrunewproject/Register.dart';
 
 import 'package:flutter/material.dart';
+
 
 class WelcomeScreen extends StatelessWidget {
   @override
@@ -18,9 +19,9 @@ class Body extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     // This size provide us total height and width of our screen
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
+        body: Center(
+      child: SingleChildScrollView(
+        child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Center(
@@ -33,9 +34,19 @@ class Body extends StatelessWidget {
                       fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: size.height * 0.05),
+              SizedBox(height: size.height * 0.20),
               ElevatedButton(
-                child: Text("LOGIN"),
+                style: ElevatedButton.styleFrom(
+                    onSurface: Colors.white10,
+                    shadowColor: Colors.blueGrey[300],
+                    primary: Colors.teal[300],
+                    padding: EdgeInsets.fromLTRB(80, 10, 70, 10)),
+                child: Text(
+                  "LOGIN",
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -47,8 +58,19 @@ class Body extends StatelessWidget {
                   );
                 },
               ),
+              SizedBox(height: size.height * 0.05),
               ElevatedButton(
-                child: Text("REGISTER"),
+                style: ElevatedButton.styleFrom(
+                    onSurface: Colors.white10,
+                    shadowColor: Colors.blueGrey[300],
+                    primary: Colors.teal[300],
+                    padding: EdgeInsets.fromLTRB(60, 10, 60, 10)),
+                child: Text(
+                  "REGISTER",
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -60,10 +82,11 @@ class Body extends StatelessWidget {
                   );
                 },
               ),
-            ],
-          ),
-        ),
+              
+            ]
+            ),
       ),
+    )
     );
   }
 }

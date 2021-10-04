@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:soskrunewproject/SignUpScreen.dart';
 import 'package:soskrunewproject/already.dart';
 
-class SignUpScreen extends StatelessWidget {
+import 'package:soskrunewproject/home.dart';
+
+
+
+
+
+
+class LoginScreen extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,53 +18,72 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 }
-
 class Body extends StatelessWidget {
-  @override
+  
+ @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        body: Center(
-          child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-            Text(
-              "SIGNUP",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: size.height * 0.03),
-            TextField(
-              decoration: InputDecoration(hintText: "Your Number"),
-              onChanged: (value) {},
-            ),
-            TextField(
-              decoration: InputDecoration(hintText: "Password"),
-              onChanged: (value) {},
-            ),
-            ElevatedButton(
-              child: Text("SIGNUP"),
-              onPressed: () {},
-            ),
-            SizedBox(height: size.height * 0.03),
-            AlreadyHaveAnAccountCheck(
-              login: false,
-              press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return LoginScreen();
-                    },
-                  ),
-                );
-              },
-            )
-          ]
-          )
-          
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "LOGIN",
+                style: TextStyle(fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+                fontSize: 30),
+              ),
+              SizedBox(height: size.height * 0.10),
+             
+              TextField(
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(10),
+                hintText: "Your Number"),
+                onChanged: (value) {},
+              ),
+              SizedBox(height: size.height * 0.05),
+              TextField(
+                decoration: InputDecoration(hintText: "Password",
+                
+                contentPadding: EdgeInsets.all(10),
+                ),
+                onChanged: (value) {},
+              ),
+              SizedBox(height: size.height * 0.15),
+              
+
+
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  onSurface: Colors.white10,
+                  shadowColor: Colors.blueGrey[300],
+                  primary: Colors.teal[300],
+                  padding: EdgeInsets.fromLTRB(70, 12, 70, 12)),
+                child:Text("LOGIN"),
+                onPressed: () {
+                 },
+              ),
+
+              SizedBox(height: size.height * 0.03),
+
+              AlreadyHaveAnAccountCheck(
+                press: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return Home();
+                      },
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-        )
-        );
+        ),
+      ),
+    );
   }
 }

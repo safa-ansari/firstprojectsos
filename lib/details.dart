@@ -23,10 +23,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
 
     Future getImage() async {
-       var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+        var image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
       setState(() {
-        _image = image;
+        _image = image as File;
           print('Image Path $_image');
       });
     }
@@ -72,6 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: new SizedBox(
                           width: 180.0,
                           height: 180.0,
+                          // ignore: unnecessary_null_comparison
                           child: (_image!=null)?Image.file(
                             _image,
                             fit: BoxFit.fill,
@@ -240,26 +241,24 @@ class _ProfilePageState extends State<ProfilePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  RaisedButton(
-                    color: Color(0xff476cfb),
+                  ElevatedButton(
+                   
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    elevation: 4.0,
-                    splashColor: Colors.blueGrey,
+                    
                     child: Text(
                       'Cancel',
                       style: TextStyle(color: Colors.white, fontSize: 16.0),
                     ),
                   ),
-                  RaisedButton(
-                    color: Color(0xff476cfb),
+                  ElevatedButton(
+                    
                     onPressed: () {
                      uploadPic(context);
                     },
                                      
-                    elevation: 4.0,
-                    splashColor: Colors.blueGrey,
+                    
                     child: Text(
                       'Submit',
                       style: TextStyle(color: Colors.white, fontSize: 16.0),

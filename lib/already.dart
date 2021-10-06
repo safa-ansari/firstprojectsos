@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:soskrunewproject/LoginScreen.dart';
+import 'package:soskrunewproject/Register.dart';
 
 class AlreadyHaveAnAccountCheck extends StatelessWidget {
   final bool login;
@@ -19,11 +21,13 @@ class AlreadyHaveAnAccountCheck extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  throw Exception();
-                });
+            login
+                ? Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return SignUpScreen();
+                  }))
+                : Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return LoginScreen();
+                  }));
           },
           child: Text(
             login ? " Register " : " Login ",

@@ -1,126 +1,169 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:pinput/pin_put/pin_put.dart';
-import 'package:soskrunewproject/LoginScreen.dart';
-import 'package:soskrunewproject/firstpage.dart';
 
-class OTPScreen extends StatefulWidget {
-  final String phone;
-
+class OTPScreen extends StatelessWidget {
+  late final String phone;
   OTPScreen(this.phone);
-  @override
-  _OTPScreenState createState() => _OTPScreenState();
-}
-
-class _OTPScreenState extends State<OTPScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
-  late String _verificationCode;
-  final TextEditingController _pinPutController = TextEditingController();
-  final FocusNode _pinPutFocusNode = FocusNode();
-  final BoxDecoration pinPutDecoration = BoxDecoration(
-    color: Colors.pinkAccent[100],
-    borderRadius: BorderRadius.circular(10.0),
-    border: Border.all(
-      color: Colors.blueAccent,
-    ),
-  );
-
-  get phone => null;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldkey,
-      appBar: AppBar(
-        title: Text('OTP Verification'),
+    return new MaterialApp(
+      theme: new ThemeData(
+        primarySwatch: Colors.blue,
       ),
-      body: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 40),
-            child: Center(
-              child: Text(
-                'Verify +91${widget.phone}',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: PinPut(
-              fieldsCount: 6,
-              textStyle: const TextStyle(fontSize: 25.0, color: Colors.white),
-              eachFieldWidth: 40.0,
-              eachFieldHeight: 55.0,
-              focusNode: _pinPutFocusNode,
-              controller: _pinPutController,
-              submittedFieldDecoration: pinPutDecoration,
-              selectedFieldDecoration: pinPutDecoration,
-              followingFieldDecoration: pinPutDecoration,
-              pinAnimationType: PinAnimationType.fade,
-              onSubmit: (pin) async {
-                try {
-                  await FirebaseAuth.instance
-                      .signInWithCredential(PhoneAuthProvider.credential(
-                          verificationId: _verificationCode, smsCode: pin))
-                      .then((value) async {
-                    if (value.user != null) {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()),
-                          (route) => false);
-                    }
-                  });
-                } catch (e) {
-                  FocusScope.of(context).unfocus();
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('invalid OTP')));
-                }
-              },
-            ),
-          )
-        ],
-      ),
+      home: new MyHomePage(),
     );
   }
+}
 
-  _verifyPhone() async {
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => new _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  late Future<FirebaseApp> _firebaseApp;
+  TextEditingController _phoneNumber = TextEditingController();
+  TextEditingController _otp = TextEditingController();
+
+  bool isLoggedIn = false;
+  bool otpSent = false;
+  late String uid;
+  late String _verificationId;
+
+  void _verifyOTP() async {
+    // we know that _verificationId is not empty
+    final credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId, smsCode: _otp.text);
+
+    try {
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      if (FirebaseAuth.instance.currentUser != null) {
+        setState(() {
+          isLoggedIn = true;
+          uid = FirebaseAuth.instance.currentUser!.uid;
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _sendOTP() async {
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: '0091${widget.phone}',
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await FirebaseAuth.instance
-              .signInWithCredential(credential)
-              .then((value) async {
-            if (value.user != null) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => WelcomeScreen()),
-                  (route) => false);
-            }
-          });
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          print(e.message);
-        },
-        codeSent: (String verficationID, int? resendToken) {
-          setState(() {
-            _verificationCode = verficationID;
-          });
-        },
-        codeAutoRetrievalTimeout: (String verificationID) {
-          setState(() {
-            _verificationCode = verificationID;
-          });
-        },
-        timeout: Duration(seconds: 120));
+        phoneNumber: _phoneNumber.text,
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+    setState(() {
+      otpSent = true;
+    });
+  }
+
+  void codeAutoRetrievalTimeout(String verificationId) {
+    setState(() {
+      _verificationId = verificationId;
+      otpSent = true;
+    });
+  }
+
+  void codeSent(String verificationId, [int? a]) {
+    setState(() {
+      _verificationId = verificationId;
+      otpSent = true;
+    });
+  }
+
+  void verificationFailed(FirebaseAuthException exception) {
+    print(exception.message);
+    setState(() {
+      isLoggedIn = false;
+      otpSent = false;
+    });
+  }
+
+  void verificationCompleted(PhoneAuthCredential credential) async {
+    await FirebaseAuth.instance.signInWithCredential(credential);
+    if (FirebaseAuth.instance.currentUser != null) {
+      setState(() {
+        isLoggedIn = true;
+        uid = FirebaseAuth.instance.currentUser!.uid;
+      });
+    } else {
+      print("Failed to Sign In");
+    }
   }
 
   @override
   void initState() {
-    
-    
     super.initState();
-    _verifyPhone();
+    _firebaseApp = Firebase.initializeApp();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      
+      body: new Center(
+        child: FutureBuilder(
+          future: _firebaseApp,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return CircularProgressIndicator();
+            return isLoggedIn
+                ? Center(
+                    child: Container(
+                    child: Text(
+                        'Welcome User!\nYour uid is: $uid   YOU HAVE SUCCESSFULLY LOGGED IN '),
+                  ))
+                : otpSent
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextField(
+                            controller: _otp,
+                            decoration: InputDecoration(
+                              hintText: "Enter your OTP",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                onSurface: Colors.white10,
+                                shadowColor: Colors.blueGrey[300],
+                                primary: Colors.teal[300],
+                                padding: EdgeInsets.fromLTRB(60, 10, 60, 10)),
+                            onPressed: _verifyOTP,
+                            child: Text("Sign In"),
+                          ),
+                        ],
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          TextField(
+                            controller: _phoneNumber,
+                            decoration: InputDecoration(
+                              hintText: "Enter your phone number",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                onSurface: Colors.white10,
+                                shadowColor: Colors.blueGrey[300],
+                                primary: Colors.teal[300],
+                                padding: EdgeInsets.fromLTRB(60, 10, 60, 10)),
+                            onPressed: _sendOTP,
+                            child: Text("Send OTP"),
+                          ),
+                        ],
+                      );
+          },
+        ),
+      ),
+    );
   }
 }

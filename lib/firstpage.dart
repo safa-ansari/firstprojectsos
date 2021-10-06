@@ -1,8 +1,7 @@
-import 'package:soskrunewproject/LoginScreen.dart';
-import 'package:soskrunewproject/Register.dart';
+
 
 import 'package:flutter/material.dart';
-
+import 'package:soskrunewproject/otp.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override
@@ -14,6 +13,8 @@ class WelcomeScreen extends StatelessWidget {
 }
 
 class Body extends StatelessWidget {
+
+   final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -35,29 +36,6 @@ class Body extends StatelessWidget {
                 ),
               ),
               SizedBox(height: size.height * 0.20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    onSurface: Colors.white10,
-                    shadowColor: Colors.blueGrey[300],
-                    primary: Colors.teal[300],
-                    padding: EdgeInsets.fromLTRB(80, 10, 70, 10)),
-                child: Text(
-                  "LOGIN",
-                  style: TextStyle(
-                    fontSize: 15,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return LoginScreen();
-                      },
-                    ),
-                  );
-                },
-              ),
               SizedBox(height: size.height * 0.05),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -66,7 +44,7 @@ class Body extends StatelessWidget {
                     primary: Colors.teal[300],
                     padding: EdgeInsets.fromLTRB(60, 10, 60, 10)),
                 child: Text(
-                  "REGISTER",
+                  "REGISTER / LOGIN ",
                   style: TextStyle(
                     fontSize: 15,
                   ),
@@ -75,14 +53,14 @@ class Body extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) {
-                        return SignUpScreen();
-                      },
+                      builder: (context) 
+                         => OTPScreen(_controller.text)
+
+                      ,
                     ),
                   );
                 },
               ),
-              
             ]
             ),
       ),

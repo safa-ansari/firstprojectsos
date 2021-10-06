@@ -69,7 +69,9 @@ class Body extends StatelessWidget {
               ),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => OTPScreen(_controller.text)));
+                    builder: (context) => OTPScreen(_controller.text)
+                    )
+                    );
               },
             ),
 

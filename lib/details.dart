@@ -1,276 +1,252 @@
 import 'package:flutter/material.dart';
-
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'dart:io';
-import 'package:path/path.dart';
+import 'package:soskrunewproject/credentials.dart';
+import 'package:soskrunewproject/database.dart';
+import 'package:soskrunewproject/home.dart';
 
 
 
 
-class ProfilePage extends StatefulWidget {
+
+
+
+
+
+
+
+class Details extends StatefulWidget {
+  const Details({ Key? key }) : super(key: key);
+
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _DetailsState createState() => _DetailsState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  late File _image;
+class _DetailsState extends State<Details> {
 
+  final userName = TextEditingController();
+  final userEmail = TextEditingController();
+  final userPhone = TextEditingController();
   @override
   Widget build(BuildContext context) {
-
-    Future getImage() async {
-        var image = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-      setState(() {
-        _image = image as File;
-          print('Image Path $_image');
-      });
-    }
-
-    Future uploadPic(BuildContext context) async{
-      String fileName = basename(_image.path);
-       Reference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
-       UploadTask uploadTask = firebaseStorageRef.putFile(_image);
-       // ignore: unused_local_variable
-       Future<String> taskSnapshot=(await uploadTask).ref.getDownloadURL();
-              setState(() {
-          print("Profile Picture uploaded");
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
-       });
-    }
-
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-              icon: Icon(FontAwesomeIcons.arrowLeft),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-          title: Text('Edit Profile'),
-        ),
-        body: Builder(
-        builder: (context) =>  Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.center,
-                    child: CircleAvatar(
-                      radius: 100,
-                      backgroundColor: Color(0xff476cfb),
-                      child: ClipOval(
-                        child: new SizedBox(
-                          width: 180.0,
-                          height: 180.0,
-                          // ignore: unnecessary_null_comparison
-                          child: (_image!=null)?Image.file(
-                            _image,
-                            fit: BoxFit.fill,
-                          ):Image.network(
-                            "https://images.unsplash.com/photo-1502164980785-f8aa41d53611?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-                            fit: BoxFit.fill,
-                          ),
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+              // Colors.purple,
+              Colors.pink
+              .shade200,
+              Colors.pinkAccent,
+            ])),
+        child: Column(
+          children: [
+            
+            Expanded(
+              child: Container(
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(50),
+                          topRight: Radius.circular(50))),
+                  margin: const EdgeInsets.only(top: 60),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 50,
                         ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 60.0),
-                    child: IconButton(
-                      icon: Icon(
-                        FontAwesomeIcons.camera,
-                        size: 30.0,
-                      ),
-                      onPressed: () {
-                        getImage();
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Username',
+                        Container(
+                            // color: Colors.red,
+                            alignment: Alignment.topLeft,
+                            margin: const EdgeInsets.only(left: 22, bottom: 20),
+                            child: 
+
+                              Text(
+                                "Enter your details",
                                 style: TextStyle(
-                                    color: Colors.blueGrey, fontSize: 18.0)),
+                                    fontSize: 35,
+                                    color: Colors.black87,
+                                    letterSpacing: 2,
+                                    ),
+                              ),
+                            )
+                            ,
+                        
+                          Container(
+                              width: double.infinity,
+                              height: 70,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 5),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.green.shade800, width: 1),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.greenAccent,
+                                        blurRadius: 10,
+                                        offset: Offset(1, 1)),
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20))),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const Icon(Icons.person_outlined),
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 10),
+                                      child: TextField(
+                                        controller:userName ,
+                                        maxLines: 1,
+                                        decoration: const InputDecoration(
+                                          hintText: "Name ",
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                              ),
+                        
+                        
+                          Container(
+                              width: double.infinity,
+                              height: 70,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 5),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.green.shade800, width: 1),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.greenAccent,
+                                        blurRadius: 10,
+                                        offset: Offset(1, 1)),
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20))),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const Icon(Icons.email_outlined),
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 10),
+                                      child: TextFormField(
+                                        controller: userEmail,
+                                        maxLines: 1,
+                                        decoration: const InputDecoration(
+                                          hintText:" Email",
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        
+                        
+                          Container(
+                              width: double.infinity,
+                              height: 70,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 5),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.green.shade800, width: 1),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.greenAccent,
+                                        blurRadius: 10,
+                                        offset: Offset(1, 1)),
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20))),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const Icon(Icons.phone_android),
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(left: 10),
+                                      child: TextField(
+                                        controller: userPhone,
+                                        maxLines: 1,
+                                        decoration: const InputDecoration(
+                                          hintText:"Phone Number ",
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                              ),
+                        
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        
+                          ElevatedButton(
+                            onPressed: () {
+                              Userinfo user = Userinfo(email: userEmail.text,phoneNumber: userPhone.text,FullName: userName.text);
+                               DatabaseFinal().createUser(user); 
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                            },
+                            style: ElevatedButton.styleFrom(
+                                onPrimary: Colors.pinkAccent,
+                                shadowColor: Colors.pinkAccent,
+                                elevation: 18,
+                                padding: EdgeInsets.zero,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                  color: Colors.pinkAccent,
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Container(
+                                width: 200,
+                                height: 50,
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Michelle James',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ],
-                      ),
+                      
+                        
+                        
+                      ],
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      child: Icon(
-                        FontAwesomeIcons.pen,
-                        color: Color(0xff476cfb),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Birthday',
-                                style: TextStyle(
-                                    color: Colors.blueGrey, fontSize: 18.0)),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('1st April, 2000',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      child: Icon(
-                        FontAwesomeIcons.pen,
-                        color: Color(0xff476cfb),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Location',
-                                style: TextStyle(
-                                    color: Colors.blueGrey, fontSize: 18.0)),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Paris, France',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      child: Icon(
-                        FontAwesomeIcons.pen,
-                        color: Color(0xff476cfb),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.all(20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Email',
-                        style:
-                            TextStyle(color: Colors.blueGrey, fontSize: 18.0)),
-                    SizedBox(width: 20.0),
-                    Text('michelle123@gmail.com',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  ElevatedButton(
-                   
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(color: Colors.white, fontSize: 16.0),
-                    ),
-                  ),
-                  ElevatedButton(
-                    
-                    onPressed: () {
-                     uploadPic(context);
-                    },
-                                     
-                    
-                    child: Text(
-                      'Submit',
-                      style: TextStyle(color: Colors.white, fontSize: 16.0),
-                    ),
-                  ),
-              
-                ],
-              )
-            ],
-          ),
+                  )),
+            )
+          ],
         ),
-        ),
-        );
+      ),
+    );
   }
 }
+
+
+
+
+  
+    

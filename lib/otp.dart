@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:soskrunewproject/details.dart';
 
 class OTPScreen extends StatelessWidget {
   late final String phone;
@@ -105,7 +106,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      
       body: new Center(
         child: FutureBuilder(
           future: _firebaseApp,
@@ -114,10 +114,24 @@ class _MyHomePageState extends State<MyHomePage> {
               return CircularProgressIndicator();
             return isLoggedIn
                 ? Center(
-                    child: Container(
-                    child: Text(
-                        'Welcome User!\nYour uid is: $uid   YOU HAVE SUCCESSFULLY LOGGED IN '),
-                  ))
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            onSurface: Colors.white10,
+                            shadowColor: Colors.blueGrey[300],
+                            primary: Colors.teal[300],
+                            padding: EdgeInsets.fromLTRB(60, 10, 60, 10)),
+                        child: Text(
+                          "Successful Login , Click Here ",
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Details()));
+                        }))
                 : otpSent
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,

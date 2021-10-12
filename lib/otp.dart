@@ -105,77 +105,109 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body: new Center(
-        child: FutureBuilder(
-          future: _firebaseApp,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return CircularProgressIndicator();
-            return isLoggedIn
-                ? Center(
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            onSurface: Colors.white10,
-                            shadowColor: Colors.blueGrey[300],
-                            primary: Colors.teal[300],
-                            padding: EdgeInsets.fromLTRB(60, 10, 60, 10)),
-                        child: Text(
-                          "Successful Login , Click Here ",
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Details()));
-                        }))
-                : otpSent
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextField(
-                            controller: _otp,
-                            decoration: InputDecoration(
-                              hintText: "Enter your OTP",
-                              border: OutlineInputBorder(),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Scaffold(
+        
+        body: Container(
+          decoration: BoxDecoration(
+            color: Colors.blueGrey[200],
+       
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: FutureBuilder(
+              future: _firebaseApp,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting)
+                  return CircularProgressIndicator(
+                    
+                  );
+                return isLoggedIn
+                    ? Details()
+                    : otpSent
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: TextField(
+                                    keyboardType: TextInputType.number, 
+                                    maxLength: 6,
+                                    controller: _otp,
+                                    decoration: InputDecoration(
+                                      hintText: "  Enter your OTP   ",
+                                      hintStyle:
+                                          TextStyle(color: Colors.black54),
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      onSurface: Colors.white10,
+                                      shadowColor: Colors.cyan[300],
+                                      primary: Colors.cyan[900],
+                                      padding:
+                                          EdgeInsets.fromLTRB(70, 20, 70, 20)),
+                                  onPressed: _verifyOTP,
+                                  child: Text(" Sign In",
+                                  style: TextStyle(
+                                    fontSize: 17
+                                  )),
+                                ),
+                              ],
                             ),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                onSurface: Colors.white10,
-                                shadowColor: Colors.blueGrey[300],
-                                primary: Colors.teal[300],
-                                padding: EdgeInsets.fromLTRB(60, 10, 60, 10)),
-                            onPressed: _verifyOTP,
-                            child: Text("Sign In"),
-                          ),
-                        ],
-                      )
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          TextField(
-                            controller: _phoneNumber,
-                            decoration: InputDecoration(
-                              hintText: "Enter your phone number",
-                              border: OutlineInputBorder(),
+                          )
+                        : Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: TextField(
+                                      keyboardType: TextInputType.phone, 
+                                      maxLength: 14,
+                                      controller: _phoneNumber,
+                                      decoration: InputDecoration(
+                                        
+                                        contentPadding:
+                                            EdgeInsets.symmetric(vertical: 2),
+                                        hintText: " Enter your phone number",
+                                        hintStyle:
+                                            TextStyle(color: Colors.black54),
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        onSurface: Colors.white10,
+                                        shadowColor: Colors.cyan[700],
+                                        primary: Colors.cyan[900],
+                                        padding: EdgeInsets.fromLTRB(
+                                            70, 20, 70, 20)),
+                                    onPressed: _sendOTP,
+                                    child: Text("Send OTP",
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                    )
+
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                onSurface: Colors.white10,
-                                shadowColor: Colors.blueGrey[300],
-                                primary: Colors.teal[300],
-                                padding: EdgeInsets.fromLTRB(60, 10, 60, 10)),
-                            onPressed: _sendOTP,
-                            child: Text("Send OTP"),
-                          ),
-                        ],
-                      );
-          },
+                          );
+              },
+            ),
+          ),
         ),
       ),
     );

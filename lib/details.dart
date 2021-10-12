@@ -1,17 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:soskrunewproject/credentials.dart';
 import 'package:soskrunewproject/database.dart';
 import 'package:soskrunewproject/home.dart';
-
-
-
-
-
-
-
-
-
-
 
 class Details extends StatefulWidget {
   const Details({ Key? key }) : super(key: key);
@@ -28,218 +19,212 @@ class _DetailsState extends State<Details> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
+      
+      
+      body:
+      Container(
         decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-              // Colors.purple,
-              Colors.pink
-              .shade200,
-              Colors.pinkAccent,
-            ])),
-        child: Column(
-          children: [
-            
-            Expanded(
-              child: Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(50),
-                          topRight: Radius.circular(50))),
-                  margin: const EdgeInsets.only(top: 60),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 50,
-                        ),
-                        Container(
-                            // color: Colors.red,
-                            alignment: Alignment.topLeft,
-                            margin: const EdgeInsets.only(left: 22, bottom: 20),
-                            child: 
+         image: DecorationImage(
+             image: AssetImage("assets/back1.png"),
+             
+        
+              fit: BoxFit.fill),
+       ),
+       width: double.infinity,
+          child: Column(
+               children: [
+           
+                 Expanded(
+             child: Container(
+                 width: double.infinity,
+                 decoration:  BoxDecoration(
+                   
+                    
+                     borderRadius: const BorderRadius.horizontal(),
+                       ),
+                 margin: const EdgeInsets.only(top: 40),
+                 child: SingleChildScrollView(
+                   child: Column(
+                     children: [
+                       
+                       
+                       const SizedBox( height: 20),
 
-                              Text(
-                                "Enter your details",
-                                style: TextStyle(
-                                    fontSize: 35,
-                                    color: Colors.black87,
-                                    letterSpacing: 2,
-                                    ),
-                              ),
-                            )
-                            ,
-                        
-                          Container(
-                              width: double.infinity,
-                              height: 70,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 20),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 5),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.green.shade800, width: 1),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.greenAccent,
-                                        blurRadius: 10,
-                                        offset: Offset(1, 1)),
-                                  ],
-                                  color: Colors.white,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(20))),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Icon(Icons.person_outlined),
-                                  Expanded(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(left: 10),
-                                      child: TextField(
-                                        controller:userName ,
-                                        maxLines: 1,
-                                        decoration: const InputDecoration(
-                                          hintText: "Name ",
-                                          border: InputBorder.none,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                              ),
-                        
-                        
-                          Container(
-                              width: double.infinity,
-                              height: 70,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 20),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 5),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.green.shade800, width: 1),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.greenAccent,
-                                        blurRadius: 10,
-                                        offset: Offset(1, 1)),
-                                  ],
-                                  color: Colors.white,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(20))),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Icon(Icons.email_outlined),
-                                  Expanded(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(left: 10),
-                                      child: TextFormField(
-                                        controller: userEmail,
-                                        maxLines: 1,
-                                        decoration: const InputDecoration(
-                                          hintText:" Email",
-                                          border: InputBorder.none,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )),
-                        
-                        
-                          Container(
-                              width: double.infinity,
-                              height: 70,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 20),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 5),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.green.shade800, width: 1),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.greenAccent,
-                                        blurRadius: 10,
-                                        offset: Offset(1, 1)),
-                                  ],
-                                  color: Colors.white,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(20))),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Icon(Icons.phone_android),
-                                  Expanded(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(left: 10),
-                                      child: TextField(
-                                        controller: userPhone,
-                                        maxLines: 1,
-                                        decoration: const InputDecoration(
-                                          hintText:"Phone Number ",
-                                          border: InputBorder.none,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                              ),
-                        
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        
-                          ElevatedButton(
-                            onPressed: () {
-                              Userinfo user = Userinfo(email: userEmail.text,phoneNumber: userPhone.text,FullName: userName.text);
-                               DatabaseFinal().createUser(user); 
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
-                            },
-                            style: ElevatedButton.styleFrom(
-                                onPrimary: Colors.pinkAccent,
-                                shadowColor: Colors.pinkAccent,
-                                elevation: 18,
-                                padding: EdgeInsets.zero,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20))),
-                            child: Ink(
-                              decoration: BoxDecoration(
-                                  color: Colors.pinkAccent,
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Container(
-                                width: 200,
-                                height: 50,
-                                alignment: Alignment.center,
-                                child: const Text(
-                                  'Login',
-                                  style: TextStyle(
-                                    fontSize: 30,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                      
-                        
-                        
-                      ],
-                    ),
-                  )),
-            )
-          ],
-        ),
+                       Container(
+                         
+                           
+                           alignment: Alignment.topLeft,
+                           margin: const EdgeInsets.only(left: 2, bottom: 10),
+                           child: 
+
+                             Text(
+                               "     Provide Your Details",
+                               style: TextStyle(
+                                 fontWeight: FontWeight.w700,
+                                   fontSize: 30,
+                                   color: Colors.white70,
+                                   
+                                   ),
+                             ),
+                           )
+                           ,
+                           SizedBox(
+                         height: 50),
+                       
+                         Container(
+                             width: double.infinity,
+                             height: 70,
+                             margin: const EdgeInsets.symmetric(
+                                 horizontal: 20, vertical: 20),
+                             padding: const EdgeInsets.symmetric(
+                                 horizontal: 15, vertical: 5),
+                             decoration: BoxDecoration(
+                                 border: Border.all(
+                                     color: Colors.green.shade800, width: 1),
+                             
+                                 
+                                 color: Colors.white,
+                                 borderRadius: const BorderRadius.horizontal()),
+                             child: Row(
+                               mainAxisAlignment: MainAxisAlignment.start,
+                               children: [
+                                 const Icon(Icons.person_outlined),
+                                 Expanded(
+                                   child: Container(
+                                     margin: const EdgeInsets.only(left: 5),
+                                     child: TextField(
+                                       controller:userName ,
+                                       maxLines: 1,
+                                       decoration: const InputDecoration(
+                                         hintText: "Enter Full Name ",
+                                         border: InputBorder.none,
+                                       ),
+                                     ),
+                                   ),
+                                 ),
+                               ],
+                             )
+                             ),
+                       
+                       
+                         Container(
+                             width: double.infinity,
+                             height: 70,
+                             margin: const EdgeInsets.symmetric(
+                                 horizontal: 20, vertical: 20),
+                             padding: const EdgeInsets.symmetric(
+                                 horizontal: 15, vertical: 5),
+                             decoration: BoxDecoration(
+                                 border: Border.all(
+                                     color: Colors.green.shade800, width: 1),
+                                 
+                                 color: Colors.white,
+                                 borderRadius: const BorderRadius.horizontal()),
+                             child: Row(
+                               mainAxisAlignment: MainAxisAlignment.start,
+                               children: [
+                                 const Icon(Icons.email_outlined),
+                                 Expanded(
+                                   child: Container(
+                                     margin: const EdgeInsets.only(left: 14),
+                                     child: TextFormField(
+                                       controller: userEmail,
+                                       maxLines: 1,
+                                       decoration: const InputDecoration(
+                                         hintText:" Enter your E-mail",
+                                         border: InputBorder.none,
+                                       ),
+                                     ),
+                                   ),
+                                 ),
+                               ],
+                             )),
+                       
+                       
+                         Container(
+                             width: double.infinity,
+                             height: 70,
+                             margin: const EdgeInsets.symmetric(
+                                 horizontal: 20, vertical: 20),
+                             padding: const EdgeInsets.symmetric(
+                                 horizontal: 15, vertical: 5),
+                             decoration: BoxDecoration(
+                                 border: Border.all(
+                                     color: Colors.green.shade800, width: 1),
+                                 
+                                   
+                                 color: Colors.white,
+                                 borderRadius: const BorderRadius.horizontal()),
+                             child: Row(
+                               mainAxisAlignment: MainAxisAlignment.start,
+                               children: [
+                                 const Icon(Icons.phone_android),
+                                 Expanded(
+                                   child: Container(
+                                     margin: const EdgeInsets.only(left: 5),
+                                     child: TextField(
+                                       controller: userPhone,
+                                       maxLines: 1,
+                                       decoration: const InputDecoration(
+                                         hintText:"Phone Number ",
+                                         border: InputBorder.none,
+                                       ),
+                                     ),
+                                   ),
+                                 ),
+                               ],
+                             )
+                             ),
+                       
+                       const SizedBox(
+                         height: 60,
+                       ),
+                       
+                         ElevatedButton(
+                           onPressed: () {
+                             Userinfo user = Userinfo(email: userEmail.text,phoneNumber: userPhone.text,FullName: userName.text);
+                              DatabaseFinal().createUser(user); 
+                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                           },
+                           style: ElevatedButton.styleFrom(
+                               onPrimary: Colors.green[800],
+                               shadowColor: Colors.greenAccent,
+                               elevation: 18,
+                               padding: EdgeInsets.zero,
+                               shape: RoundedRectangleBorder(
+                                   borderRadius: BorderRadius.circular(20)
+                                   )
+                                   ),
+
+                                   
+
+                           child: Ink(
+                             decoration: BoxDecoration(
+                                 color: Colors.green[300],
+                                 borderRadius: BorderRadius.horizontal()),
+                             child: Container(
+                               width: 200,
+                               height: 50,
+                               alignment: Alignment.center,
+                               child: const Text(
+                                 'Login',
+                                 style: TextStyle(
+                                   fontSize: 30,
+                                   color: Colors.white,
+                                 ),
+                               ),
+                             ),
+                           ),
+                         ),
+                     
+                       
+                       
+                     ],
+                   ),
+                 )),
+           )
+         ],
+       ),
       ),
     );
   }

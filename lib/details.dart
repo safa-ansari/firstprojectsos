@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:soskrunewproject/credentials.dart';
 import 'package:soskrunewproject/database.dart';
@@ -181,9 +182,16 @@ class _DetailsState extends State<Details> {
                        ),
                        
                          ElevatedButton(
-                           onPressed: () {
+                           onPressed: () async {
                              Userinfo user = Userinfo(email: userEmail.text,phoneNumber: userPhone.text,FullName: userName.text);
                               DatabaseFinal().createUser(user); 
+                              final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                              sharedPreferences.setString('email', userEmail.text);
+                              sharedPreferences.setString('phone', userPhone.text);
+
+
+
+
                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
                            },
                            style: ElevatedButton.styleFrom(

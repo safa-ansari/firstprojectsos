@@ -1,3 +1,4 @@
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -108,11 +109,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: new Scaffold(
-        
         body: Container(
           decoration: BoxDecoration(
             color: Colors.blueGrey[200],
-       
           ),
           child: Padding(
             padding: const EdgeInsets.all(2.0),
@@ -120,9 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
               future: _firebaseApp,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
-                  return CircularProgressIndicator(
-                    
-                  );
+                  return CircularProgressIndicator();
                 return isLoggedIn
                     ? Details()
                     : otpSent
@@ -131,18 +128,14 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: TextField(
-                                    keyboardType: TextInputType.number, 
-                                    maxLength: 6,
-                                    controller: _otp,
-                                    decoration: InputDecoration(
-                                      hintText: "  Enter your OTP   ",
-                                      hintStyle:
-                                          TextStyle(color: Colors.black54),
-                                      border: OutlineInputBorder(),
-                                    ),
+                                TextField(
+                                  keyboardType: TextInputType.number,
+                                  maxLength: 6,
+                                  controller: _otp,
+                                  decoration: InputDecoration(
+                                    hintText: "  Enter your OTP   ",
+                                    hintStyle: TextStyle(color: Colors.black54),
+                                    border: OutlineInputBorder(),
                                   ),
                                 ),
                                 ElevatedButton(
@@ -154,9 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           EdgeInsets.fromLTRB(70, 20, 70, 20)),
                                   onPressed: _verifyOTP,
                                   child: Text(" Sign In",
-                                  style: TextStyle(
-                                    fontSize: 17
-                                  )),
+                                      style: TextStyle(fontSize: 17)),
                                 ),
                               ],
                             ),
@@ -168,24 +159,33 @@ class _MyHomePageState extends State<MyHomePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: TextField(
-                                      keyboardType: TextInputType.phone, 
-                                      maxLength: 14,
-                                      controller: _phoneNumber,
-                                      decoration: InputDecoration(
-                                        
-                                        contentPadding:
-                                            EdgeInsets.symmetric(vertical: 2),
-                                        hintText: " Enter your phone number",
-                                        hintStyle:
-                                            TextStyle(color: Colors.black54),
-                                        border: OutlineInputBorder(),
-                                      ),
+                                children: <Widget>[ 
+
+                                  TextFormField(
+                                    keyboardType: TextInputType.phone,
+                                    maxLength: 14,
+                                    controller: _phoneNumber,
+                                     decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(vertical: 2),
+                                  prefixIcon: CountryCodePicker(
+                                    onChanged: print,
+                                    // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+                                    initialSelection: 'IN',
+                                    favorite: ['+91', 'IN'],
+                                    countryFilter: ['IN', 'IN'],
+                                    showFlagDialog: false,
+
+                                    //Get the country information relevant to the initial selection
+                                    onInit: (code) =>
+                                        print("  ${code!.dialCode} "),
+                                  ),
+                                      hintText: " Enter your phone number",
+                                      hintStyle:
+                                          TextStyle(color: Colors.black54),
+                                      border: OutlineInputBorder(),
                                     ),
                                   ),
+                                  
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                         onSurface: Colors.white10,
@@ -195,11 +195,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                             70, 20, 70, 20)),
                                     onPressed: _sendOTP,
                                     child: Text("Send OTP",
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                    )
-
-                                    ),
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                        )),
                                   ),
                                 ],
                               ),

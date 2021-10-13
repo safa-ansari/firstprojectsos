@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:soskrunewproject/firstpage.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:soskrunewproject/home.dart';
+import 'package:soskrunewproject/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +57,6 @@ class _InitializerWidgetState extends State<InitializerWidget> {
           )
         : _auth.currentUser != null
             ? HomeScreen()
-            : WelcomeScreen();
+            : LoginScreen();
   }
 }

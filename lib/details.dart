@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:soskrunewproject/credentials.dart';
 import 'package:soskrunewproject/database.dart';
 import 'package:soskrunewproject/home.dart';
@@ -21,12 +20,20 @@ class _DetailsState extends State<Details> {
   Widget build(BuildContext context) {
     return Scaffold(
       
+      appBar: AppBar(
+        title: Center(child: Text(" Details ")),
+         centerTitle: true,
+          backgroundColor: Colors.blue[900],
+        
+        
+        
+        ),
       
       body:
       Container(
         decoration: BoxDecoration(
          image: DecorationImage(
-             image: AssetImage("assets/back1.png"),
+             image: AssetImage("assets/back2.png"),
              
         
               fit: BoxFit.fill),
@@ -56,17 +63,9 @@ class _DetailsState extends State<Details> {
                            
                            alignment: Alignment.topLeft,
                            margin: const EdgeInsets.only(left: 2, bottom: 10),
-                           child: 
+                           
 
-                             Text(
-                               "     Provide Your Details",
-                               style: TextStyle(
-                                 fontWeight: FontWeight.w700,
-                                   fontSize: 30,
-                                   color: Colors.white70,
-                                   
-                                   ),
-                             ),
+                             
                            )
                            ,
                            SizedBox(
@@ -178,7 +177,7 @@ class _DetailsState extends State<Details> {
                              ),
                        
                        const SizedBox(
-                         height: 60,
+                         height: 35,
                        ),
                        
                          ElevatedButton(
@@ -208,8 +207,16 @@ class _DetailsState extends State<Details> {
 
                            child: Ink(
                              decoration: BoxDecoration(
-                                 color: Colors.green[300],
-                                 borderRadius: BorderRadius.horizontal()),
+                                 color: Colors.blue[300],
+                                  
+                                 borderRadius: BorderRadius.horizontal(),
+                                 boxShadow: [
+                                   BoxShadow(
+                                    color: Colors.blueGrey,
+                                 
+                                 
+                                 )]
+                                 ),
                              child: Container(
                                width: 200,
                                height: 50,

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soskrunewproject/credentials.dart';
@@ -12,6 +13,7 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   final userName = TextEditingController();
   final userEmail = TextEditingController();
@@ -183,10 +185,12 @@ class _DetailsState extends State<Details> {
                          ElevatedButton(
                            onPressed: () async {
                              Userinfo user = Userinfo(email: userEmail.text,phoneNumber: userPhone.text,FullName: userName.text);
+                              final uIdSP = _auth.currentUser!.uid.toString();
                               DatabaseFinal().createUser(user); 
                               final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                               sharedPreferences.setString('email', userEmail.text);
                               sharedPreferences.setString('phone', userPhone.text);
+                              sharedPreferences.setString('uid', uIdSP);
 
 
 

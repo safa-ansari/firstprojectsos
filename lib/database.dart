@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:soskrunewproject/credentials.dart';
 
+
 class DatabaseFinal {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future createUser(Userinfo user) async {

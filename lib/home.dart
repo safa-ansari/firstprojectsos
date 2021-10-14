@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:soskrunewproject/NavBar.dart';
@@ -53,7 +54,40 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Icon(Icons.logout),
         ),
+
+
+
+        
       ),
     );
+
+  } @override
+  void initState() {
+    super.initState();
+    _getUserName();
   }
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Map? data;
+  var _userName;
+   // ignore: non_constant_identifier_names
+   final _Auth = FirebaseAuth.instance;
+        Future<void> _getUserName() async {
+          print('user id 222222222222222222222222222222222222222222222222222222222222222222222222222 ${_auth.currentUser!.uid}');
+        _firestore
+            .collection('users')
+            .doc( _Auth.currentUser!.uid)
+            .get()
+            .then((value) {
+          setState(() {
+           
+             var data = value.data();
+             
+             _userName = data?['phone'].toString();
+
+            print('username isssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss $_userName');
+          });
+        }).catchError((e){
+           print(e.toString());
+        });
+      }
 }

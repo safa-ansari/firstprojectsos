@@ -3,7 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'home.dart';
+import 'package:soskrunewproject/home.dart';
+
+
 class OtpScreen extends StatefulWidget {
   const OtpScreen({ Key? key }) : super(key: key);
 

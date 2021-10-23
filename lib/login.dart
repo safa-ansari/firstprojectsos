@@ -60,8 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
           await SharedPreferences.getInstance();
       final uisp = sharedPreferences.getString('uid');
 
-      print(
-          'uid isssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss $uisp');
+      print('uid is $uisp');
       if (authCredential.user != null &&
           _auth.currentUser!.uid.toString() == uisp) {
         Navigator.pushReplacement(
@@ -105,28 +104,23 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(height: 160),
         Container(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Icon(Icons.phone_android),
-                Expanded(
-
-                  child: 
-                  Container(
-                     child: TextField(
-                      keyboardType: TextInputType.phone,
-                      controller: phoneController,
-                      
-                      decoration: const InputDecoration(
-                        hintText: "Enter your Phone Number ",
-                      ),
-                    ),
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Icon(Icons.phone_android),
+            Expanded(
+              child: Container(
+                child: TextField(
+                  keyboardType: TextInputType.phone,
+                  controller: phoneController,
+                  decoration: const InputDecoration(
+                    hintText: "Enter your Phone Number ",
                   ),
                 ),
-              ],
-            )
+              ),
             ),
+          ],
+        )),
         SizedBox(height: 30),
-        
         TextButton(
           onPressed: () async {
             setState(() {
@@ -176,7 +170,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
-       
       ],
     );
   }
@@ -184,28 +177,14 @@ class _LoginScreenState extends State<LoginScreen> {
   getOtpFormWidget(context) {
     return Column(
       children: [
-        
-        
         Spacer(
           flex: 2,
         ),
         TextField(
-          //         length: 6,
-          // width: MediaQuery.of(context).size.width,
-
-          // fieldWidth: 50,
-          // style: TextStyle(
-          //   fontSize: 17
-          // ),
-          // textFieldAlignment: MainAxisAlignment.spaceAround,
-          // fieldStyle: FieldStyle.box,
-          // onCompleted: (pin) {
-          //   pinAuth = pin;
-          //   print("Completed: " + pin);
-          // },
           controller: otpController,
+          keyboardType: TextInputType.phone,
           decoration: InputDecoration(
-            hintText: " Enter OTP code ",
+            hintText: " Enter OTP ",
           ),
         ),
         SizedBox(
@@ -220,23 +199,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
             signInWithPhoneAuthCredential(phoneAuthCredential);
           },
-          child:  Ink(
-              decoration: BoxDecoration(
-                  color: Colors.green[300],
-                  borderRadius: BorderRadius.circular(10)),
-              child: Container(
-                width: 150,
-                height: 40,
-                alignment: Alignment.center,
-                child: const Text(
-                  'Verify',
-                  style: TextStyle(
-                    fontSize: 23,
-                    color: Colors.white,
-                  ),
+          child: Ink(
+            decoration: BoxDecoration(
+                color: Colors.green[300],
+                borderRadius: BorderRadius.circular(10)),
+            child: Container(
+              width: 150,
+              height: 40,
+              alignment: Alignment.center,
+              child: const Text(
+                'Verify',
+                style: TextStyle(
+                  fontSize: 23,
+                  color: Colors.white,
                 ),
               ),
             ),
+          ),
         ),
         Spacer(
           flex: 2,
@@ -251,17 +230,16 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Registeration',
-          style: TextStyle(
-            fontSize: 20
-
+          title: Text(
+            'Registeration',
+            style: TextStyle(fontSize: 20),
           ),
-        ),
           backgroundColor: Colors.greenAccent[400],
           centerTitle: true,
         ),
         key: _scaffoldKey,
         body: Container(
+         
           child: showLoading
               ? Center(
                   child: CircularProgressIndicator(),

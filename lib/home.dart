@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soskrunewproject/NavBar.dart';
 import 'package:soskrunewproject/login.dart';
 
@@ -20,13 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
 
         drawer: NavBar(
-          
-
-
-
-
-
-        ),
+          ),
 
         appBar: AppBar(
           title: Text('HOME SCREEN'),
@@ -50,7 +45,15 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () async {
             await _auth.signOut();
             Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => LoginScreen()));
+                MaterialPageRoute(builder: (context) => LoginScreen()
+                
+                )
+                
+                
+                );
+                 final SharedPreferences sharedPreferences =
+                await SharedPreferences.getInstance();
+            sharedPreferences.remove('uid');
           },
           child: Icon(Icons.logout),
         ),
@@ -72,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
    // ignore: non_constant_identifier_names
    final _Auth = FirebaseAuth.instance;
         Future<void> _getUserName() async {
-          print('user id 222222222222222222222222222222222222222222222222222222222222222222222222222 ${_auth.currentUser!.uid}');
+          print('user id  ${_auth.currentUser!.uid}');
         _firestore
             .collection('users')
             .doc( _Auth.currentUser!.uid)
@@ -84,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
              
              _userName = data?['phone'].toString();
 
-            print('username isssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss $_userName');
+            print('username is $_userName');
           });
         }).catchError((e){
            print(e.toString());

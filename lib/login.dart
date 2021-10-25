@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:otp_text_field/otp_field.dart';
+import 'package:otp_text_field/otp_field_style.dart';
+import 'package:otp_text_field/style.dart';
 import 'package:soskrunewproject/database.dart';
 import 'package:soskrunewproject/details.dart';
 import 'package:soskrunewproject/home.dart';
@@ -27,11 +32,14 @@ class _LoginScreenState extends State<LoginScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   String uid = '';
   String finalEmail = '';
-
+  String? phoneNumber;
+  PhoneNumber number = PhoneNumber(isoCode: 'IND');
   late String verificationId;
   late UserCredential authCredential;
-
+  var otp;
+  bool userIsLoggedIn = false;
   bool showLoading = false;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   // OurUser _user = OurUser();
   Future getValidationData() async {
     final SharedPreferences sharedPreferences =
@@ -56,16 +64,30 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         showLoading = false;
       });
-      final SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-      final uisp = sharedPreferences.getString('uid');
+       try {
+       await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .get().then((value) {
+            if (value.exists){
+                userIsLoggedIn = true;
+            }
+            });
 
-      print('uid is $uisp');
+      
+    } catch (e) {
+      print(e.toString());
+    }
+  
+        
+      
+      print('this is ssssssssssssssssssssssssssssssssss user is logged in $userIsLoggedIn');
+   
       if (authCredential.user != null &&
-          _auth.currentUser!.uid.toString() == uisp) {
+          userIsLoggedIn) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
-      } else if (authCredential.user != null) {
+      } else if (authCredential.user != null  ) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Details()));
       }
@@ -102,25 +124,53 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       children: [
         SizedBox(height: 160),
-        Container(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Icon(Icons.phone_android),
-            Expanded(
-              child: Container(
-                child: TextField(
-                  keyboardType: TextInputType.phone,
-                  controller: phoneController,
-                  decoration: const InputDecoration(
-                    hintText: "Enter your Phone Number ",
+         Container(
+              width: double.infinity,
+              height: 90,
+              margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.green, width: 1),
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.green,
+                        blurRadius: 10,
+                        offset: Offset(1, 1)),
+                  ],
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.all(Radius.circular(10))),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 1),
+                child: InternationalPhoneNumberInput(
+                  onInputChanged: (PhoneNumber number) {
+                    phoneNumber = number.phoneNumber;
+                    print(number.phoneNumber);
+                  },
+                  onInputValidated: (bool value) {
+                    print(value);
+                  },
+                  selectorConfig: SelectorConfig(
+                    selectorType: PhoneInputSelectorType.DIALOG,
                   ),
+                  ignoreBlank: false,
+                  searchBoxDecoration: InputDecoration(
+                    fillColor: Colors.white,
+                  ),
+                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                  initialValue: number,
+                  selectorTextStyle: TextStyle(color: Colors.black),
+                  textFieldController: phoneController,
+                  formatInput: false,
+                  keyboardType: TextInputType.numberWithOptions(
+                      signed: true, decimal: true),
+                  inputBorder: OutlineInputBorder(),
+                  onSaved: (PhoneNumber number) {
+                    print('On Saved: $number');
+                  },
                 ),
               ),
             ),
-          ],
-        )),
-        SizedBox(height: 30),
+        
         TextButton(
           onPressed: () async {
             setState(() {
@@ -128,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
             });
 
             await _auth.verifyPhoneNumber(
-              phoneNumber: phoneController.text,
+              phoneNumber: phoneNumber.toString(),
               verificationCompleted: (phoneAuthCredential) async {
                 setState(() {
                   showLoading = false;
@@ -177,15 +227,30 @@ class _LoginScreenState extends State<LoginScreen> {
   getOtpFormWidget(context) {
     return Column(
       children: [
+        Spacer(flex: 1,),
+        Text('Enter Otp',style: TextStyle(fontSize: 40),),
         Spacer(
-          flex: 2,
+          flex: 1,
         ),
-        TextField(
-          controller: otpController,
-          keyboardType: TextInputType.phone,
-          decoration: InputDecoration(
-            hintText: " Enter OTP ",
-          ),
+        OTPTextField(
+          length: 6,
+          width: MediaQuery.of(context).size.width,
+          textFieldAlignment: MainAxisAlignment.spaceAround,
+          fieldWidth: 55,
+          style: TextStyle(color: Colors.black),
+          fieldStyle: FieldStyle.box,
+          outlineBorderRadius: 15,
+          otpFieldStyle:OtpFieldStyle(
+            backgroundColor: Colors.white,
+            borderColor: Colors.black
+          ) ,
+          onChanged: (pin) {
+            print("Changed: " + pin);
+          },
+          onCompleted: (pin) {
+            print("Completed: " + pin);
+            otp = pin;
+          },
         ),
         SizedBox(
           height: 16,
@@ -195,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
             PhoneAuthCredential phoneAuthCredential =
                 PhoneAuthProvider.credential(
                     verificationId: verificationId,
-                    smsCode: otpController.text);
+                    smsCode: otp);
 
             signInWithPhoneAuthCredential(phoneAuthCredential);
           },

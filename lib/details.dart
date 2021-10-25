@@ -80,6 +80,22 @@ class _DetailsState extends State<Details> {
         width: double.infinity,
         child: Column(
           children: [
+             Container(
+              margin: const EdgeInsets.only(top: 50),
+              child:
+                CircleAvatar(
+                  radius: 50,
+                  child: ClipOval(
+                    child: profileUrl != null ?Image.network(
+                      '$profileUrl',
+                      height: 120,
+                      width: 120,
+                      fit: BoxFit.cover,
+                    ): Image.asset('assets/clock.png'),
+                  ),
+                ),
+              
+            ),
             Expanded(
               child: Container(
                   width: double.infinity,
@@ -157,37 +173,7 @@ class _DetailsState extends State<Details> {
                                 ),
                               ],
                             )),
-                        Container(
-                            width: double.infinity,
-                            height: 60,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 5),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Colors.green.shade800, width: 1),
-                                color: Colors.white,
-                                borderRadius: const BorderRadius.horizontal()),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Icon(Icons.phone_android),
-                                Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.only(left: 5),
-                                    child: TextField(
-                                      controller: userPhone,
-                                      maxLines: 1,
-                                      decoration: const InputDecoration(
-                                        hintText: "Phone Number ",
-                                        border: InputBorder.none,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )),
+                        
                         const SizedBox(
                           height: 10,
                         ),
@@ -195,16 +181,16 @@ class _DetailsState extends State<Details> {
                           // color: Colors.red,
                           alignment: Alignment.topLeft,
                           margin: const EdgeInsets.only(left: 22),
-                          child: Center(
+                          
                             child: Text(
                               "  Select profile picture",
                               style: TextStyle(
-                                fontSize: 5,
-                                color: Colors.black38,
+                                fontSize: 30,
+                                color: Colors.white60,
                                 letterSpacing: 1,
                               ),
                             ),
-                          ),
+                          
                         ),
                         Padding(
                             padding: const EdgeInsets.all(20.0),

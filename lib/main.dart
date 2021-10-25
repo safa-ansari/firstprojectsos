@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,33 +30,70 @@ class InitializerWidget extends StatefulWidget {
 }
 
 class _InitializerWidgetState extends State<InitializerWidget> {
-  late FirebaseAuth _auth;
-
-  // ignore: unused_field
-  late User _user;
-
+   late FirebaseAuth _auth;
+  bool userIsLoggedIn = false;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool collectionComplete = false;
   bool isLoading = true;
+  _getUserstatus() async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .get()
+          .then((value) {
+        if (value.exists) {
+          userIsLoggedIn = true;
+          
+               print(
+              'user is logggggggggggggggggggggggggggggggggggeeeeeeeedddddddddd $userIsLoggedIn');
+        }
+       
+        
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+    setState(() {
+       isLoading = false;
+    });
+   
+  }
+
+  
 
   @override
   void initState() {
-    // ignore: todo
-    // TODO: implement initState
-    super.initState();
     _auth = FirebaseAuth.instance;
+  
+     
+    
+     
+    super.initState();
+    _getUserstatus();
+    
+   
 
-    isLoading = false;
+      
+
+    
+  
   }
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? Scaffold(  
-            body: Center( 
-              child: CircularProgressIndicator(),
-            ),
-          )
-        : _auth.currentUser != null
-            ? HomeScreen()
-            : LoginScreen();
+    if (isLoading) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    } else if (_auth.currentUser != null && userIsLoggedIn) {
+      return HomeScreen();
+    } else if (_auth.currentUser != null) {
+      return LoginScreen();
+    } else {
+      return LoginScreen();
+    }
   }
 }

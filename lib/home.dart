@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soskrunewproject/NavBar.dart';
+import 'package:soskrunewproject/details.dart';
 import 'package:soskrunewproject/login.dart';
 
 
@@ -13,15 +15,84 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
-
+  var _url ;
+  Map? data;
+  var _userName;
+  var _profileUrl;
+  var _email;
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
 
-        drawer: NavBar(
+drawer: FutureBuilder(
+    future: _getUserName(),
+    builder: (BuildContext context,AsyncSnapshot snapshot){
+      if (snapshot.hasData){
+        return Drawer(
+     child: ListView(
+        children: [
+          UserAccountsDrawerHeader(
+            accountName: Text("$_userName"),
+            accountEmail: Text('$_email'),
+            currentAccountPicture: CircleAvatar(
+              child: ClipOval(
+                child:   _profileUrl != null
+                            ? Image.network(
+                                '$_profileUrl',
+
+
+
+                  fit: BoxFit.cover,
+                  width: 90,
+                  height: 90,
+                )
+                  : Image.asset('assets/clock.png'),
+
+
+                
+              ),
+            ),
           ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('My Credentials '),
+            onTap: (){
+              Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context)
+             => Details()),
+          );
+            }
+          )
+          ,
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Settings'),
+            onTap: () => null,
+          ),
+          ListTile(
+            leading: Icon(Icons.description),
+            title: Text('Policies'),
+            onTap: () => null,
+          ),
+          Divider(),
+          ListTile(
+            title: Text('Exit'),
+            leading: Icon(Icons.exit_to_app),
+            onTap: () => HomeScreen(),
+          ),
+        ],
+      ),
+    );
+      }
+      else{
+        return CircularProgressIndicator();
+      }
+    }
+    ),
+    
+  
 
         appBar: AppBar(
           title: Text('HOME SCREEN'),
@@ -70,27 +141,32 @@ class _HomeScreenState extends State<HomeScreen> {
     _getUserName();
   }
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Map? data;
-  var _userName;
+ 
    // ignore: non_constant_identifier_names
    final _Auth = FirebaseAuth.instance;
-        Future<void> _getUserName() async {
-          print('user id  ${_auth.currentUser!.uid}');
-        _firestore
-            .collection('users')
-            .doc( _Auth.currentUser!.uid)
-            .get()
-            .then((value) {
-          setState(() {
-           
-             var data = value.data();
-             
-             _userName = data?['phone'].toString();
+      Future _getUserName() async {
+    print(
+        'user id  ${_auth.currentUser!.uid}');
+    var ppId = _auth.currentUser!.uid;
+    print('this is ppid $ppId');
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference ref = storage.ref().child("images/$ppId");
+    _url = await ref.getDownloadURL();
 
-            print('username is $_userName');
-          });
-        }).catchError((e){
-           print(e.toString());
-        });
-      }
+    _profileUrl = _url.toString();
+    print('this is url $_profileUrl');
+    try {
+      var doc = await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid)
+          .get();
+      data = doc.data();
+      _userName = data?['fullname'];
+      
+      _email = data?['email'];
+      return doc.data();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

@@ -37,6 +37,7 @@ dependencies:
   camera: ^0.9.4+1
   cloud_firestore: ^2.5.3
   shared_preferences: ^2.0.8
+  otp_text_field: ^1.1.1
   
   
 
